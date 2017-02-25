@@ -1,0 +1,162 @@
+#File:       design.txt
+#Author:     Thomas Hervey
+#Date:       4/24/11
+#Email:      h46@umbc.edu
+#Section:    3
+#
+#
+#proj1 is an error checking program that takes in a passed HTML or XHTML file
+#and checks to make sure that all of the code tag formattings are correct for 
+#in order for thecode to work. If there are any problems with the tags,
+#proj1 will quit and print an error message explaining that there were either
+#tag balancing issues or there were an incorrect number of tags. If the XHTML
+#code that gets checked is okay with no tag issues, there will be a message
+#that prints that particular result.
+
+
+Algorithm Design:
+
+
+I.   Using command line, the user will enter in the file name as the file to
+     be examined in proj1.py  --> project1.py input.HTML
+
+II.  The rules for queing and stacking are imported into proj1.py. ourFile
+     variable is set as ourFile.open(sys.argv[1], 'r'). A call to 
+     printGreeting() will print out the greeting information to the user.
+
+III. Phase I Beginning: The file will be read line by line and stored in the 
+     que ourQue().
+     A.  A call to enque() (from queue.py) within a for loop will read each 
+	 line individually in the file.
+     B.  In enque(), a series of if/else statements will make sure we get only
+         the tags from the file. This will be done by:
+         if '<' in the line (continue to step C) otherwise we don't want
+         anything to be saved into our que and go onto the next line.
+     C.  A call to stripText() will remove everything that doesn't
+         have tag marks <>. The non-stripped text will be saved into ourQue().
+     D.  If the file ends in the middle of a tag, the program will quit and
+         print an error message explaining which tag went wrong. This will be
+         done after the loop by calling checkLastTag() which will see:
+         if '/' is in last tag, continue, otherwise print a middle tag error.
+     E.  Print out each value in the ourQue() and an appropriate message. 
+     F.  Close ourFile
+
+IV.  Phase II Beginning : The que will be read and stored as a stack in 
+     ourStack().
+     A.  A call to push() (from stack.py) will add values to the stack 
+         ourStack() by copying the values one by one from the que. An if/else 
+         statement will check to see if each tag is a beginning or closing tag.
+         This is important because we want only beginning tags so that when
+         the search through the que reaches an end tag, they can be compared.
+
+V.  The que and the stack will be compared value by value for similarities.
+    A.  While a for loop is copying each tag to ourStack():
+        if the que value is an end tag --> A call to deque() (from queue.py) 
+	will get the new first value of the que to be compared. 
+    B.  Then, a call to pop() (from stack.py) within that same for loop
+        iteration will take off the top stacked value.
+    C.  A call to valueCompare() passed the que and stack value will compare if
+        the two values are matching tags.
+    D.  Within valueCompare(), a call to selfClosing() passed both que and
+        stack values will check to see if either is self-closing. If so, it
+        will be removed from it's location (stack or que) and a corresponding
+        print message will be printed.
+    E.  Next in valueCompare(), the two hypothetically matching tags will see
+        if based on their location, they are a match:
+        if the stack value is the header and the que value is the correct
+        corresponding end, the two will be removed from the stack and que,
+        the corresponding message will be printed saying that the tags match,
+        and the next iteration of the for loop copying the tag values into
+        the stack will be performed. If the two do not match, this means that
+        the tags are out of order or missing. An appropriate message will be
+        displayed saying that at that certain tag, there is a mismatch and the
+        system will exit.
+     
+
+
+
+__________________________________________________________________________
+Constants:
+
+None
+__________________________________________________________________________
+Functions:
+
+from sys import  *
+
+
+
+
+from queue.py import *
+
+# enque()
+# Using the current line of the file, checks to see if there are any tags in
+  the line. If so, it takes and stores only the needed tags.
+# Inputs: lineText (current file line)
+# Output: Calls stripTest(lineText), stores lineTag in ourQue()
+def enque()
+
+# stripText()
+# Using the current line, removes everything not enclosed by '<' and '>'
+# Inputs: lineText
+# Output: lineTag
+def stripText()
+
+# deque()
+# Accesses the first value in ourQue as text which will be used for comparison.
+# Then, the value will be removed from the top of ourQue().
+# Inputs: NONE
+# Outputs: ourQue(0)
+def deque()
+
+
+
+
+from stack.py import *
+
+# push()
+# This will add the top value (already made sure it is a head tag) 
+# onto ourStack().
+# Inputs: ourQue(0)
+# Outputs: stores ourQue(0) in ourStack().
+def push()
+
+# pop()
+# This will access the top value in our stack. This is used to be compared to
+# the top value of ourQue(). Then, the value will be removed from ourStack().
+# Input: NONE
+# Output: ourStack(0)
+def pop() 
+
+
+# printGreeting()
+# This will print a greeting/ instructions to the user about how the program
+# will work. 
+# Input: NONE
+# Output: NONE
+def printGreeting()
+
+# valueCompare()
+# If the top value of ourQue is an end tag, this will be called to access the
+# top value of ourQue() and ourStack() and see if they match. This will be done
+# by first seeing if either one is self closing by calling selfClosing(). If
+# so then the iteration will terminate and the selfClosing value will be 
+# removed and the next value in that stack or que will be compared. Otherwise,
+# if the two match, a correponding message will be printed that they match and
+# each will be removed from their corresponding order and the next copy to 
+# ourStack() will iterate. If they are different, then an appropriate error
+# message will appear explaining which tag was an error and the program will
+# exit.
+# Input: ourQue(0), ourStack(0)
+# Output: Calls, selfClosing(ourQue(0), ourStack(0)), printed message
+def valueCompare()
+
+# selfClosing()
+# This checks to see if, before comparing the tags, either of the tags is self
+# closing. This is important because if it is, it doesn't need a pair or to be
+# compared.
+# Input: Q, S
+# Output: NONE, printed self-closing message
+def SelfClosing()
+
+

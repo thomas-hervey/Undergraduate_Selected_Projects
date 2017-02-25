@@ -1,0 +1,44 @@
+<html>
+<head>
+<title> xhtml data file </title>
+</head>
+
+<body>
+<center><h1>
+This is a level 1 heading that's centered
+</h1></center>
+
+<b>emphasized text</b> 
+<P>This is a paragraph</P>
+<P>
+<br /> 
+we're skipping some lines using a self-closing tag 
+<br />
+<br />
+before ending the second paragraph</P>
+the next tag is a horizontal-rule which is also self-closing
+<hr />
+<P>the third paragraph is started
+<foo>this tag foo is not an html tag but could be an xml tag</foo></P>
+<P>
+the fourth paragraph
+<br />
+<tag1>
+skips some lines and opens 3 tags
+<br />
+<tag2>
+<br />
+<tag3>
+<br />
+before it starts to close them
+</tag3>
+<br />
+</tag2>
+<br />
+</tag1>
+<br />
+they're all closed now</P>
+<P>it ends with the fifth paragraph</P>
+</body>
+</html>
+and finally closes the body and the document

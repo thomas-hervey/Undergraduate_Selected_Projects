@@ -1,0 +1,955 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf230
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red127\green0\blue85;\red63\green95\blue191;\red127\green159\blue191;
+\red127\green127\blue159;\red63\green127\blue95;\red0\green0\blue192;\red42\green0\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs22 \cf2 package\cf0  proj3;\
+\
+\pard\pardeftab720
+\cf3 /**\cf0 \
+\cf3  * 			  This class provides all methods used by the GUI for \ul Monte\ulnone  \ul Carlo\ulnone  Solitaire. \cf0 \
+\cf3  * 			  Acting as the skeleton structure of a game flow, a new game/replay can be\cf0 \
+\cf3  * 			  called with the following effects of GUI clicking & removing (removeCards\cf0 \
+\cf3  * 			  & Consolidate) and then dealing new cards to continue playing.\cf0 \
+\cf3  * 			  Class Invariant: \cf0 \
+\cf3  * \cf0 \
+\cf3  * 			  Help from CMSC Help Center, 202 TAs, \ul Zach\ulnone  \ul Hullihen\cf0 \ulnone \
+\cf3  * \cf4 @version\cf3    Completed \ul Nov\ulnone  7 : Due \ul Nov\ulnone  7\cf0 \
+\cf3  * \cf4 @author\cf3     \ul Thomas\ulnone  \ul Hervey\ulnone  <h46\ul @umbc.edu\ulnone >\cf0 \
+\cf3  * \cf4 @project\cf3 	  CMSC202 \cf5 -\cf3 Fall 2011 \cf5 -\cf3 Project 3\cf0 \
+\cf3  * \cf4 @section\cf3    01\cf0 \
+\cf3  */\cf0 \
+\pard\pardeftab720
+\cf2 public\cf0  \cf2 class\cf0  Game \cf2 extends\cf0  java.lang.Object \{\
+\
+	\cf6 //Total number of cards left in the deck\cf0 \
+	\cf2 private\cf0  \cf2 int\cf0  \cf7 cardsLeft\cf0 ;\
+	\cf6 //Current player score\cf0 \
+	\cf2 private\cf0  \cf2 int\cf0  \cf7 ourScore\cf0 ;\
+	\cf6 //Random number seed that simulates a shuffle\cf0 \
+	\cf2 private\cf0  \cf2 int\cf0  \cf7 seedNumber\cf0 ;\
+	\cf6 //Creating our deck\cf0 \
+	Deck \cf7 ourDeck\cf0 ;\
+	\cf2 int\cf0  \cf7 tableauRows\cf0 ;\
+	\cf2 int\cf0  \cf7 tableauColumns\cf0 ;\
+	\cf6 //Creating a queue to use for consolidating remaining cards\cf0 \
+	Card[] \cf7 ourQueue\cf0  = \cf2 new\cf0  Card[25];\
+	\cf6 //Creating our tableau\cf0 \
+	Card \cf7 ourTableau\cf0 [][];\
+	\
+	\cf3 /**\cf0 \
+\pard\pardeftab720
+\cf3 	 * Construct a new \ul Monte\ulnone  \ul Carlo\ulnone  Solitaire object\cf0 \
+\cf3 	 * \cf4 @param\cf3  tableauRows\cf0 \
+\cf3 	 * \cf4 @param\cf3  tableauColumns\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Game(\cf2 int\cf0  tableauRows, \cf2 int\cf0  tableauColumns)\{\
+		\cf7 cardsLeft\cf0  = 52;\
+		\cf7 ourScore\cf0  = 0;\
+		\cf6 //Initializing our deck\cf0 \
+		\cf7 ourDeck\cf0  = \cf2 new\cf0  Deck();\
+		\cf2 this\cf0 .\cf7 tableauRows\cf0  = tableauRows;\
+		\cf2 this\cf0 .\cf7 tableauColumns\cf0  = tableauColumns;\
+		\cf6 //Create our row x column (likely 5x5) 2D array to simulate our tableau\cf0 \
+		\cf7 ourTableau\cf0  = \cf2 new\cf0  Card[tableauRows][tableauColumns];\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Starts a new game of solitaire for the specified game number in accordance to project specifications.\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @param\cf3  gameNumber\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 void\cf0  newGame(\cf2 long\cf0  gameNumber)\{\
+		\cf6 //Shuffle the deck before dealing them to the tableau\cf0 \
+		\cf7 ourDeck\cf0 .Shuffle(gameNumber);\
+				\
+		\cf6 //Filling our tableau with our deck of cards\cf0 \
+		\cf2 for\cf0 (\cf2 int\cf0  a = 0; a < \cf7 tableauRows\cf0 ; a++)\{ \cf6 //By row\cf0 \
+			\cf2 for\cf0 (\cf2 int\cf0  b = 0; b < \cf7 tableauColumns\cf0 ; b++)\{ \cf6 //By column\cf0 \
+				\cf7 ourTableau\cf0 [a][b] = \cf7 ourDeck\cf0 .drawCard();\
+				\cf7 cardsLeft\cf0  -= 1;\
+			\}\
+		\}\
+	\}\
+	\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Returns the number of cards left in the deck\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: cardsLeft > 0\cf0 \
+\cf3 	 * \cf4 @return\cf3  cardsLeft \cf5 -\cf3  number of cards\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 int\cf0  numberOfCardsLeft()\{\
+		\cf2 if\cf0 (\cf7 cardsLeft\cf0  <= 0)\
+			\cf2 return\cf0  0;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 cardsLeft\cf0 ;\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Returns the player's score for the current game\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: ourScore > 0\cf0 \
+\cf3 	 * \cf4 @return\cf3  ourScore \cf5 -\cf3  the score of the game\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 int\cf0  getScore()\{\
+		\cf2 if\cf0 (\cf7 ourScore\cf0  <= 0)\
+			\cf2 return\cf0  0;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 ourScore\cf0 ;\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Returns a Suit \ul enum\ulnone  representing the suit of the card at the specified coordinate in the tableau\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @param\cf3  coordinate\cf0 \
+\cf3 	 * \cf4 @return\cf3  cardSuit \cf5 -\cf3  the suit of the card\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Suit getSuit(Coordinate coordinate)\{\
+		\cf2 if\cf0 (\cf7 ourTableau\cf0 [coordinate.getRow()][coordinate.getColumn()] == \cf2 null\cf0 )\
+			\cf2 return\cf0  \cf2 null\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 ourTableau\cf0 [coordinate.getRow()][coordinate.getColumn()].getSuit();\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Returns a Rank \ul enum\ulnone  representing the rank of the card at the specified coordinate in the tableau\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @param\cf3  coordinates\cf0 \
+\cf3 	 * \cf4 @return\cf3  cardRank \cf5 -\cf3  the rank of the card\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Rank getRank(Coordinate coordinates)\{\
+		\cf2 if\cf0 (\cf7 ourTableau\cf0 [coordinates.getRow()][coordinates.getColumn()] == \cf2 null\cf0 )\
+			\cf2 return\cf0  \cf2 null\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 ourTableau\cf0 [coordinates.getRow()][coordinates.getColumn()].getRank();\
+	\}\
+	\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Returns a help message explaining the rules of the game.\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @return\cf3  rules \cf5 -\cf3  the rules of the game\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  java.lang.String getHelpText()\{\
+		String rules = \cf8 ""\cf0 ;\
+		rules += \cf8 "-----Monte Carlo Solitare Help Menu-----"\cf0 ;\
+		rules += \cf8 "\\nThis program is a simulated game of the Solitare version made popular in \\nMonte Carlo."\cf0 ;\
+		rules += \cf8 "To play this game, eliminate adjacent pairs of cards (by rank) \\nby clicking on both cards."\cf0 ;\
+		rules += \cf8 "Pairs are considered adjacent if they are \\nneighbors above/below, next to or diagonal to one"\cf0 ;\
+		rules += \cf8 "another. Once you have \\neliminated all of the present pairs, click the remaining card stack to"\cf0 ;\
+		rules += \cf8 "\\ncondolidate the remaining cards(moves them up in line filling the new gaps) \\nand fill new"\cf0 ;\
+		rules += \cf8 "cards in. As you match up piars, your score will increase by two \\npoints and your remaining"\cf0 ;\
+		rules += \cf8 "card number will decrease by that same amount. \\nKeep playing until you either run out of pairs,"\cf0 ;\
+		rules += \cf8 " or you have eliminated all of \\nthe cards. If you click on a pair that are not a match, the"\cf0 ;\
+		rules += \cf8 " pair will deselect \\nand nothing will change."\cf0 ;\
+		\cf2 return\cf0  rules;\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Restarts the current game using the same seed\cf0 \
+\cf3 	 * Therefore, the cards are shuffled the same way\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: \cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 void\cf0  replay()\{\
+		newGame(\cf7 seedNumber\cf0 );\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Moves cards in the tableau towards the top (left and up) to replace the cards that were removed. \cf0 \
+\cf3 	 * Then deals cards from the deck to refill the empty spaces at the bottom of the tableau.\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: the tableau has had every value pushed up and to the left and new cards have been filled in\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 void\cf0  consolidate()\{\
+		\cf6 //Declaring a counter to know how far we have gone through our tableau\cf0 \
+		\cf2 int\cf0  queueCounter = 0;\
+		\cf6 //Loop through the remaining cards in our tableau and appends them to ourQueue\cf0 \
+		\cf2 for\cf0 (\cf2 int\cf0  a = 0; a < \cf7 tableauRows\cf0 ; a++)\{\
+			\cf2 for\cf0 (\cf2 int\cf0  b = 0; b < \cf7 tableauColumns\cf0 ; b++)\{\
+				\cf2 if\cf0 (\cf7 ourTableau\cf0 [a][b] != \cf2 null\cf0 )\{\
+					\cf7 ourQueue\cf0 [queueCounter] = \cf7 ourTableau\cf0 [a][b];\
+					\cf6 //System.out.println("T---");\cf0 \
+					\cf6 //System.out.println(ourTableau[a][b]);\cf0 \
+					System.\cf7 out\cf0 .println(\cf8 "Q+++"\cf0 );\
+					System.\cf7 out\cf0 .println(\cf7 ourQueue\cf0 [queueCounter]);\
+					\cf7 ourTableau\cf0 [a][b] = \cf2 null\cf0 ;\
+					\cf6 //System.out.println("/////");\cf0 \
+					\cf6 //System.out.println(ourTableau[a][b]);\cf0 \
+				\}\
+				queueCounter++;\
+			\}	\
+		\}\
+		System.\cf7 out\cf0 .println(\cf8 "**********"\cf0 );\
+		\cf2 for\cf0 (\cf2 int\cf0  i = 0; i < \cf7 ourQueue\cf0 .\cf7 length\cf0 ; i ++)\
+			System.\cf7 out\cf0 .println(\cf7 ourQueue\cf0 [i]);\
+		System.\cf7 out\cf0 .println(\cf8 "**************"\cf0 );\
+		\cf6 //Declaring a counter to go through all of ourQueue to place beck into the tableau\cf0 \
+		\cf2 int\cf0  queueCounter2 = 0;\
+		\cf6 //Replacing the queued cards back into the tableau\cf0 \
+		\cf2 for\cf0 (\cf2 int\cf0  x = 0; x < \cf7 tableauRows\cf0 ; x++)\{\
+			\cf2 for\cf0 (\cf2 int\cf0  y = 0; y < \cf7 tableauColumns\cf0 ; y++)\{\
+				\cf2 if\cf0 (queueCounter != 0)\
+					\cf7 ourTableau\cf0 [x][y] = \cf7 ourQueue\cf0 [queueCounter2];\
+				\cf2 else\cf0 \{\
+					\cf7 ourTableau\cf0 [x][y] = \cf7 ourDeck\cf0 .drawCard();\
+					\cf7 cardsLeft\cf0 --;\
+				\}\
+				System.\cf7 out\cf0 .println(\cf7 ourTableau\cf0 [x][y]);\
+				System.\cf7 out\cf0 .println(\cf7 ourQueue\cf0 [queueCounter2]);\
+				queueCounter--;\
+				queueCounter2++;\
+			\}	\
+		\}		\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @return\cf3  true \cf5 -\cf3  if the hint feature is functional / false \cf5 -\cf3  otherwise\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 boolean\cf0  isHintImplemented()\{\
+		\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Finds two matching cards according to the rules of the game \cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @return\cf3  an array of 2 Coordinates for the matching cards if found, null if no match is found\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Coordinate[] getHint()\{\
+		\cf2 return\cf0  \cf2 null\cf0 ;\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Determines if the cards at the specified tableau locations are a match according to the rules of \cf0 \
+\cf3 	 * \ul Monte\ulnone  \ul Carlo\ulnone  Solitaire and if so, removes them from the tableau\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:\cf0 \
+\cf3 	 * \cf4 @param\cf3  coordinate1\cf0 \
+\cf3 	 * \cf4 @param\cf3  coordinate2\cf0 \
+\cf3 	 * \cf4 @return\cf3  true \cf5 -\cf3  if cards can be removed / false \cf5 -\cf3  otherwise\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 boolean\cf0  removeCards(Coordinate coordinate1, Coordinate coordinate2)\{\
+		\cf6 //Creating instance variables for the x and y coordinates of each of the two points\cf0 \
+		\cf2 int\cf0  x = coordinate1.getRow();\
+		\cf2 int\cf0  y = coordinate1.getColumn();\
+		\cf2 int\cf0  i = coordinate2.getRow();\
+		\cf2 int\cf0  j = coordinate2.getColumn();\
+\
+		\
+		\cf6 //Checks to see if the two points have the same suit and rank (we cannot have two of the same card)\cf0 \
+		\cf2 if\cf0 (\cf7 ourTableau\cf0 [x][y].getSuit() == \cf7 ourTableau\cf0 [i][j].getSuit())   \cf6 //If the two suits are the same\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf6 //Checks to see if the two points have different ranks\cf0 \
+		\cf2 else\cf0  \cf2 if\cf0 (\cf7 ourTableau\cf0 [x][y].getRank() != \cf7 ourTableau\cf0 [i][j].getRank())    \cf6 //If the two ranks are different\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf6 //If the two points have different coordinates and ranks, check to see if they are neighbors\cf0 \
+			\cf2 if\cf0 (isNeighbor(x, y, i, j) == \cf2 true\cf0 )\{\
+				\cf6 //If they are neighbors, increase our score by 2 (one for each card removed, and decrease our\cf0 \
+				\cf7 ourScore\cf0  += 2;\
+				\cf7 ourTableau\cf0 [x][y] = \cf2 null\cf0 ;\
+				\cf7 ourTableau\cf0 [i][j] = \cf2 null\cf0 ;\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\}\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if the given coordinates are neighbors in our tableau.\cf0 \
+\cf3 	 * This checks to see if, based on the coordinates of our first point,\cf0 \
+\cf3 	 * if the second point is a neighbor on our tableau. This includes the\cf0 \
+\cf3 	 * same coordinates, edge cases (checks only on the tableau and not beyond)\cf0 \
+\cf3 	 * and regular locations (first point isn't on an edge).\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: our x & y ordered pairs for both points are not null or\cf0 \
+\cf3 	 * 				  in the same location\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: known if the two points are neighbors or not\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true \cf5 -\cf3  two points are neighbors / false \cf5 -\cf3  if they are not\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isNeighbor(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf6 //The two points have the same coordinate\cf0 \
+		\cf2 if\cf0 (x == i && y == j)\
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+		\
+		\cf6 //If coordinate1 is an edge case\cf0 \
+		\
+		\cf6 //Coordinate1 is in the top row (row 0) \cf0 \
+		\cf2 else\cf0  \cf2 if\cf0 (x == 0)\{\
+			\cf6 //If coordinate1 is in the left most column (\ul col\ulnone  0) (top left corner)\cf0 \
+			\cf2 if\cf0 (y == 0)\{\
+				\cf6 //If coordinate2 is to the right, lower right diagonal, or bottom of coordinate1\cf0 \
+				\cf2 if\cf0 ((isRight(x,y,i,j)) || (isLowerRightDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+			\cf6 //If coordinate1 is in the right most column (tableauColumns) (top right corner)\cf0 \
+			\cf2 else\cf0  \cf2 if\cf0 (y == \cf7 tableauColumns\cf0 )\{\
+				\cf6 //If coordinate2 is to the left, lower left diagonal, or bottom of coordinate1\cf0 \
+				\cf2 if\cf0 ((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+			\cf6 //If coordinate1 is not in either of the top corners but is on the top row\cf0 \
+			\cf2 else\cf0 \{\
+				\cf6 //If coordinate2 is to the left, lower left diagonal, bottom, lower right diagonal, or right of coordinate1\cf0 \
+				\cf2 if\cf0 ((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)) || \
+						(isLowerRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+		\}\
+		\cf6 //Coordinate1 is in the bottom row (tableauRows)\cf0 \
+		\cf2 else\cf0  \cf2 if\cf0 (x == \cf7 tableauRows\cf0 )\{\
+			\cf6 //If coordinate1 is in the left most column (\ul col\ulnone  0) (bottom left corner)\cf0 \
+			\cf2 if\cf0 (y == 0)\{\
+				\cf6 //If coordinate2 is above, upper right diagonal, or right of coordinate1\cf0 \
+				\cf2 if\cf0 (isUpper(x,y,i,j) || (isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+			\cf6 //If coordinate1 is in the right most column (tableauColumns) (bottom right corner)\cf0 \
+			\cf2 else\cf0  \cf2 if\cf0 (y == \cf7 tableauColumns\cf0 )\{\
+				\cf6 //if coordinate2 is above, upper left diagonal, or left of coordinate1\cf0 \
+				\cf2 if\cf0 ((isUpper(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isLeft(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+			\cf6 //If coordinate1 is not in either of the bottom corners but is on the bottom row\cf0 \
+			\cf2 else\cf0 \{\
+				\cf6 //If coordinate2 is left, upper left diagonal, upper, upper right diagonal, right of coordinate 1\cf0 \
+				\cf2 if\cf0 ((isLeft(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isUpper(x,y,i,j)) || \
+						(isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\
+					\cf2 return\cf0  \cf2 true\cf0 ;\
+				\cf2 else\cf0 \
+					\cf2 return\cf0  \cf2 false\cf0 ;\
+			\}\
+		\}\
+		\cf6 //Because all of the corners have been taken care of, we only have to check the left and right sides\cf0 \
+		\cf6 //Coordinate1 is in the first column (\ul col\ulnone  0)\cf0 \
+		\cf2 else\cf0  \cf2 if\cf0 (y == 0)\{\
+			\cf6 //If coordinate2 is above, upper right, right, lower right diagonal, below coordinate1\cf0 \
+			\cf2 if\cf0 ((isUpper(x,y,i,j)) || (isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)) || \
+					(isLowerRightDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\}\
+		\cf6 //Coordinate1 is in the last column (tableauColumns)\cf0 \
+		\cf2 else\cf0  \cf2 if\cf0 (y == \cf7 tableauColumns\cf0 )\{\
+			\cf6 //If coordinate2 is above, upper left diagonal, left, lower left diagonal, below coordinate1\cf0 \
+			\cf2 if\cf0 ((isUpper(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isLeft(x,y,i,j)) || \
+					(isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\}\
+		\
+		\cf6 //If coordinate1 is not an edge case\cf0 \
+		\
+		\cf2 else\cf0  \cf2 if\cf0 ((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)) || \
+				(isLowerRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)) || (isUpperRightDiagonal(x,y,i,j)) || \
+				isUpper(x,y,i,j) || isUpperLeftDiagonal(x,y,i,j))\
+			\cf2 return\cf0  \cf2 true\cf0 ;\
+		\
+		\cf6 //The two coordinates are not neighbors\cf0 \
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\cf6 /*			\cf0 \
+\pard\pardeftab720
+\cf6 	/**\cf0 \
+\cf6 	 * \cf0 \
+\cf6 	 * \ul Pre\ulnone -condition:\cf0 \
+\cf6 	 * Post-condition:\cf0 \
+\cf6 	 * @param x\cf0 \
+\cf6 	 * @param y\cf0 \
+\cf6 	 * @param i\cf0 \
+\cf6 	 * @param j\cf0 \
+\cf6 	 * @return true (if the two points are acceptable neighbors) false (they are not neighbors)\cf0 \
+\cf6 	 *\cf0 \
+\cf6 	public boolean isNeighbor(\ul int\ulnone  x, \ul int\ulnone  y, \ul int\ulnone  i, \ul int\ulnone  j)\{\cf0 \
+\cf6 		//Checks to see if the two points have the same coordinates\cf0 \
+\cf6 		if(x == i && y == j)\{\cf0 \
+\cf6 			System.out.println("These two points \ul ar\ulnone  e at the same coordinate");\cf0 \
+\cf6 			return false;\cf0 \
+\cf6 		\}\cf0 \
+\cf6 		\cf0 \
+\cf6 		//Checks to see if the first coordinate is an edge case (so it cannot check cards outside the tableau boundary)\cf0 \
+\cf6 		else if((x == 0 || x == tableauRows) || (y == 0 || y == tableauColumns))\{\cf0 \
+\cf6 			//If coordinate1 row is 0 (farthest to the top)\cf0 \
+\cf6 			if(x == 0)\{\cf0 \
+\cf6 				//If coordinate1 column is 0 (making it the top left corner)\cf0 \
+\cf6 				if(y == 0)\{\cf0 \
+\cf6 					//If coordinate2 is to the right, lower right diagonal, or bottom of coordinate1\cf0 \
+\cf6 					if((isRight(x,y,i,j)) || (isLowerRightDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}\cf0 \
+\cf6 				//If coordinate1 column is TableauColumns (making it the top right corner)\cf0 \
+\cf6 				else if(y == tableauColumns)\{\cf0 \
+\cf6 					//If coordinate2 is to the left, lower left diagonal, or bottom of coordinate1\cf0 \
+\cf6 					if((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}\cf0 \
+\cf6 				//If Coordinate1 is not a corner but on the top edge of ourTableau\cf0 \
+\cf6 				else\{\cf0 \
+\cf6 					//If coordinate2 is to the left, lower left diagonal, bottom, lower right diagonal, or right of coordinate1\cf0 \
+\cf6 					if((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)) || \cf0 \
+\cf6 							(isLowerRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}\cf0 \
+\cf6 			\}		\cf0 \
+\cf6 			//If coordiante1 row is tableauRows (farthest to the bottom)\cf0 \
+\cf6 			else if(x == tableauRows)\{\cf0 \
+\cf6 				//If coordinate1 column is 0 (making it the bottom left corner)\cf0 \
+\cf6 				if(y == 0)\{\cf0 \
+\cf6 					//If coordinate2 is above, upper right diagonal, or right of coordinate1\cf0 \
+\cf6 					if(isUpper(x,y,i,j) || (isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}\cf0 \
+\cf6 				//If coordinate1 column is TableauColumns (making it the bottom right corner)\cf0 \
+\cf6 				else if(y == tableauColumns)\{\cf0 \
+\cf6 					//if coordinate2 is above, upper left diagonal, or left of coordinate1\cf0 \
+\cf6 					if((isUpper(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isLeft(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}\cf0 \
+\cf6 				//Coordinate1 is not a corner but on the bottom edge of ourTableau\cf0 \
+\cf6 				else\{\cf0 \
+\cf6 					//If coordinate2 is left, upper left diagonal, upper, upper right diagonal, right of coordinate 1\cf0 \
+\cf6 					if((isLeft(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isUpper(x,y,i,j)) || \cf0 \
+\cf6 							(isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)))\cf0 \
+\cf6 						return true;\cf0 \
+\cf6 					else\cf0 \
+\cf6 						return false;\cf0 \
+\cf6 				\}			\cf0 \
+\cf6 			\}\cf0 \
+\cf6 			//Because all of the corners have been taken care of, only the left and right edges have to be covered)\cf0 \
+\cf6 			//If coordiante1 column is 0\cf0 \
+\cf6 			else if(y == 0)\{\cf0 \
+\cf6 				//If coordinate2 is above, upper right, right, lower right diagonal, below coordinate1\cf0 \
+\cf6 				if((isUpper(x,y,i,j)) || (isUpperRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)) || \cf0 \
+\cf6 						(isLowerRightDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\cf0 \
+\cf6 					return true;\cf0 \
+\cf6 				else\cf0 \
+\cf6 					return false;\cf0 \
+\cf6 			\}\cf0 \
+\cf6 			//If coordiante1 column is tableauColumns (farthest to the right column)\cf0 \
+\cf6 			else if(y == tableauColumns)\{\cf0 \
+\cf6 				//If coordinate2 is above, upper left diagonal, left, lower left diagonal, below coordinate1\cf0 \
+\cf6 				if((isUpper(x,y,i,j)) || (isUpperLeftDiagonal(x,y,i,j)) || (isLeft(x,y,i,j)) || \cf0 \
+\cf6 						(isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)))\cf0 \
+\cf6 					return true;\cf0 \
+\cf6 				else\cf0 \
+\cf6 					return false;\cf0 \
+\cf6 			\}\cf0 \
+\cf6 		\cf0 \
+\cf6 		Checks to see if the first coordinate (which is not an edge case) has coordinate2 as its neighbor\cf0 \
+\cf6 		If coordinate2 is left, lower left diagonal, below, lower right diagonal, right, upper right diagonal, \cf0 \
+\cf6 		above, or upper left diagonal of coordinate1\cf0 \
+\cf6 		else if((isLeft(x,y,i,j)) || (isLowerLeftDiagonal(x,y,i,j)) || (isBottom(x,y,i,j)) || \cf0 \
+\cf6 				(isLowerRightDiagonal(x,y,i,j)) || (isRight(x,y,i,j)) || (isUpperRightDiagonal(x,y,i,j)) || \cf0 \
+\cf6 				isUpper(x,y,i,j) || isUpperLeftDiagonal(x,y,i,j))\cf0 \
+\cf6 			return true;\cf0 \
+\cf6 		\cf0 \
+\cf6 		//If the two points are not neighbors\cf0 \
+\cf6 		else\cf0 \
+\cf6 			return false;\cf0 \
+\cf6 		\}\cf0 \
+\cf6 	\}\cf0 \
+\cf6 	*/\cf0 \
+	\
+	\cf3 /**\cf0 \
+\pard\pardeftab720
+\cf3 	 * Checks to see if coordinate2 is directly to the left of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not left\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly to the left of the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't to the left)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isLeft(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y - 1)\
+			\cf2 if\cf0 (i == x)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is diagonally to the lower left of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not lower left diagonal\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is a lower left diagonal neighbor to the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't lower left diagonal)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isLowerLeftDiagonal(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y - 1)\
+			\cf2 if\cf0 (i == x + 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is directly below coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not below\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly below the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't below)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isBottom(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y)\
+			\cf2 if\cf0 (i == x + 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is diagonally to the lower right of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not lower right diagonal\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is a lower right diagonal neighbor to the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't lower right diagonal)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isLowerRightDiagonal(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y + 1)\
+			\cf2 if\cf0 (i == x + 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is directly to the right of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not to the right\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly to the right of the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't to the right)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isRight(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y + 1)\
+			\cf2 if\cf0 (i == x)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is diagonally to the upper right of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not upper right diagonal\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly to the top right of the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't to the top right)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isUpperRightDiagonal(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y + 1)\
+			\cf2 if\cf0 (i == x - 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is directly above coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition:coordinate2 is or is not above\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly above the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't above)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isUpper(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y)\
+			\cf2 if\cf0 (i == x - 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * Checks to see if coordinate2 is diagonally to the upper left of coordinate1\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition:\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: coordinate2 is or is not upper left diagonal\cf0 \
+\cf3 	 * \cf4 @param\cf3  x\cf0 \
+\cf3 	 * \cf4 @param\cf3  y\cf0 \
+\cf3 	 * \cf4 @param\cf3  i\cf0 \
+\cf3 	 * \cf4 @param\cf3  j\cf0 \
+\cf3 	 * \cf4 @return\cf3  true (if the second point is directly to the upper left of the first point)\cf0 \
+\cf3 	 * 		   false (if the second point isn't to the upper left)\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 private\cf0  \cf2 boolean\cf0  isUpperLeftDiagonal(\cf2 int\cf0  x, \cf2 int\cf0  y, \cf2 int\cf0  i, \cf2 int\cf0  j)\{\
+		\cf2 if\cf0 (j == y - 1)\
+			\cf2 if\cf0 (i == x - 1)\
+				\cf2 return\cf0  \cf2 true\cf0 ;\
+			\cf2 else\cf0 \
+				\cf2 return\cf0  \cf2 false\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+	\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Determines if the player has \ul won\ulnone  the game by removing all the cards and thereby achieving a score of 52\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: none\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: the winner has \ul won\ulnone  or not yet \ul won\ulnone  the game\cf0 \
+\cf3 	 * \cf4 @return\cf3  true \cf5 -\cf3  if the player has \ul won\ulnone  / false \cf5 -\cf3  otherwise\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 boolean\cf0  isWin()\{\
+		\cf2 if\cf0 (\cf7 cardsLeft\cf0  == 0 && \cf7 ourScore\cf0  == 52)\
+			\cf2 return\cf0  \cf2 true\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf2 false\cf0 ;\
+	\}\
+\
+	\cf2 public\cf0  \cf2 static\cf0  \cf2 void\cf0  main(String[] args)\{\
+		Game test = \cf2 new\cf0  Game(4,4);\
+		System.\cf7 out\cf0 .println(test.\cf7 cardsLeft\cf0 );\
+		System.\cf7 out\cf0 .println(test.\cf7 ourScore\cf0 );\
+		System.\cf7 out\cf0 .println(test.\cf7 seedNumber\cf0 );\
+		System.\cf7 out\cf0 .println(test.numberOfCardsLeft());\
+		test.\cf7 cardsLeft\cf0  = -3;\
+		System.\cf7 out\cf0 .println(test.numberOfCardsLeft());\
+		System.\cf7 out\cf0 .println(test.getScore());\
+		test.\cf7 ourScore\cf0  = -5;\
+		System.\cf7 out\cf0 .println(test.getScore());\
+		Coordinate testCoordinate = \cf2 new\cf0  Coordinate(4, 4);\
+		System.\cf7 out\cf0 .println(test.getSuit(testCoordinate));\
+		\
+		\
+	\}\
+\
+\}\
+\
+\
+\pard\pardeftab720
+\cf2 package\cf0  proj3;\
+\
+\pard\pardeftab720
+\cf3 /**\cf0 \
+\cf3  * 			  Encapsulates the row and column of one cell in a 2\cf5 -\cf3 D coordinate system. \cf0 \
+\cf3  * 			  Class Invariants: The row and column are nonnegative, coordinate objects are immutable\cf0 \
+\cf3  * \cf4 @version\cf3    Completed \ul Nov\ulnone  7 : Due \ul Nov\ulnone  7\cf0 \
+\cf3  * \cf4 @author\cf3     \ul Thomas\ulnone  \ul Hervey\ulnone  <h46\ul @umbc.edu\ulnone >\cf0 \
+\cf3  * \cf4 @project\cf3 	  CMSC202 \cf5 -\cf3 Fall 2011 \cf5 -\cf3 Project 3\cf0 \
+\cf3  * \cf4 @section\cf3    01\cf0 \
+\cf3  */\cf0 \
+\pard\pardeftab720
+\cf2 public\cf0  \cf2 class\cf0  Coordinate \cf2 extends\cf0  java.lang.Object \{\
+	\
+	\cf2 private\cf0  \cf2 int\cf0  \cf7 rowNumber\cf0 ;\
+	\cf2 private\cf0  \cf2 int\cf0  \cf7 columnNumber\cf0 ;\
+	\
+	\cf3 /**\cf0 \
+\pard\pardeftab720
+\cf3 	* Constructs a new Coordinate from the specified row and column\cf0 \
+\cf3     * \cf4 @Param\cf3  row \cf5 -\cf3  the row (zero based)\cf0 \
+\cf3     * \cf4 @Param\cf3  column \cf5 -\cf3  the column (zero base)\cf0 \
+\cf3     */\cf0 \
+	\cf2 public\cf0  Coordinate(\cf2 int\cf0  row,\cf2 int\cf0  column)\{\
+		\cf2 this\cf0 .\cf7 rowNumber\cf0  = row;\
+		\cf2 this\cf0 .\cf7 columnNumber\cf0  = column;\
+	\}\
+		\
+	\cf3 /**\cf0 \
+\cf3 	* \ul Accessor\ulnone  for the column\cf0 \
+\cf3 	* \ul Pre\cf5 \ulnone -\cf3 condition: columnNumber >= 0\cf0 \
+\cf3 	* Post\cf5 -\cf3 condition: none\cf0 \
+\cf3 	* \cf4 @Return\cf3  columnNumber \cf5 -\cf3  the column number\cf0 \
+\cf3 	*/\cf0 \
+	\cf2 public\cf0  \cf2 int\cf0  getColumn()\{	\
+		\cf2 if\cf0 (\cf7 columnNumber\cf0  <= 0)\
+			\cf2 return\cf0  0;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 columnNumber\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	* \ul Accessor\ulnone  for the row\cf0 \
+\cf3 	* \ul Pre\cf5 \ulnone -\cf3 condition: rowNumber >= 0\cf0 \
+\cf3 	* Post\cf5 -\cf3 condition: none\cf0 \
+\cf3 	* \cf4 @Return\cf3  rowNumber \cf5 -\cf3  the row number\cf0 \
+\cf3 	*/\cf0 \
+	\cf2 public\cf0  \cf2 int\cf0  getRow()\{\
+		\cf2 if\cf0 (\cf7 rowNumber\cf0  <= 0)\
+			\cf2 return\cf0  0;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 rowNumber\cf0 ;\
+	\}\
+	\
+	\cf2 public\cf0  \cf2 static\cf0  \cf2 void\cf0  main(String[] args)\{\
+		Coordinate test = \cf2 new\cf0  Coordinate(2, 3);\
+		System.\cf7 out\cf0 .println(test.getRow());\
+		System.\cf7 out\cf0 .println(test.getColumn());\
+		test.\cf7 rowNumber\cf0  = 3;\
+		System.\cf7 out\cf0 .println(test.\cf7 rowNumber\cf0 );\
+		System.\cf7 out\cf0 .println(test.getRow());\
+		test.\cf7 columnNumber\cf0  = 4;\
+		System.\cf7 out\cf0 .println(test.\cf7 columnNumber\cf0 );\
+		System.\cf7 out\cf0 .println(test.getColumn());\
+		test.\cf7 columnNumber\cf0  = -3;\
+		System.\cf7 out\cf0 .println(test.getColumn());\
+	\}\
+\}\
+\
+\
+\pard\pardeftab720
+\cf2 package\cf0  proj3;\
+\
+\pard\pardeftab720
+\cf3 /**\cf0 \
+\cf3  * 			  Creates a card object with a rank and a suit that is used to \cf0 \
+\cf3  * 			  represent one instance of a card in a deck using encapsulation.\cf0 \
+\cf3  * 			  Class Invariants: the suit and rank of the card are not null, \cf0 \
+\cf3  * 								the Card objects are immutable\cf0 \
+\cf3  * \cf4 @version\cf3    Completed \ul Nov\ulnone  7 : Due \ul Nov\ulnone  7\cf0 \
+\cf3  * \cf4 @author\cf3     \ul Thomas\ulnone  \ul Hervey\ulnone  <h46\ul @umbc.edu\ulnone >\cf0 \
+\cf3  * \cf4 @project\cf3 	  CMSC202 \cf5 -\cf3 Fall 2011 \cf5 -\cf3 Project 3\cf0 \
+\cf3  * \cf4 @section\cf3    01\cf0 \
+\cf3  */\cf0 \
+\pard\pardeftab720
+\cf2 public\cf0  \cf2 class\cf0  Card \{\
+	\cf2 private\cf0  Rank \cf7 rank\cf0 ;\
+	\cf2 private\cf0  Suit \cf7 suit\cf0 ;\
+	\cf2 public\cf0  Card(Suit suit, Rank rank)\{\
+		\cf2 this\cf0 .\cf7 suit\cf0  = suit;\
+		\cf2 this\cf0 .\cf7 rank\cf0  = rank;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\pard\pardeftab720
+\cf3 	 * \ul Accessor\ulnone  for retrieving the card's suit\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: suit isn't null\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: none\cf0 \
+\cf3 	 * \cf4 @return\cf3  suit \cf5 -\cf3  card's suit\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Suit getSuit()\{\
+		\cf2 if\cf0 (\cf7 suit\cf0  == \cf2 null\cf0 )\
+			\cf2 return\cf0  \cf2 null\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 suit\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * \ul Accessor\ulnone  for retrieving the card's rank\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: rank isn't null\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: none\cf0 \
+\cf3 	 * \cf4 @return\cf3  rank \cf5 -\cf3  card's rank\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Rank getRank()\{\
+		\cf2 if\cf0 (\cf7 rank\cf0  == \cf2 null\cf0 )\
+			\cf2 return\cf0  \cf2 null\cf0 ;\
+		\cf2 else\cf0 \
+			\cf2 return\cf0  \cf7 rank\cf0 ;\
+	\}\
+	\
+	\cf3 /**\cf0 \
+\cf3 	 * toString test element\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  String toString()\{\
+		String ourString = \cf8 ""\cf0 ;\
+		ourString += \cf2 this\cf0 .getSuit();\
+		ourString += \cf8 " "\cf0 ;\
+		ourString += \cf2 this\cf0 .getRank();\
+		\cf2 return\cf0  ourString;\
+	\}\
+	\
+	\cf2 public\cf0  \cf2 static\cf0  \cf2 void\cf0  main(String[] args)\{\
+		Card test = \cf2 new\cf0  Card(Suit.\cf7 HEARTS\cf0 , Rank.\cf7 ACE\cf0 );\
+		System.\cf7 out\cf0 .println(test.getSuit());\
+		System.\cf7 out\cf0 .println(test.getRank());\
+		test.\cf7 rank\cf0  = Rank.\cf7 ACE\cf0 ;\
+		System.\cf7 out\cf0 .println(test.getRank());\
+		test.\cf7 suit\cf0  = Suit.\cf7 DIAMONDS\cf0 ;\
+		System.\cf7 out\cf0 .println(test.getSuit());\
+		test.\cf7 suit\cf0  = \cf2 null\cf0 ;\
+		System.\cf7 out\cf0 .println(test.\cf7 suit\cf0 );\
+		System.\cf7 out\cf0 .println(test.getSuit());\
+	\}\
+\}\
+\
+\
+\pard\pardeftab720
+\cf2 package\cf0  proj3;\
+\
+\cf2 import\cf0  java.util.Random;\
+\
+\pard\pardeftab720
+\cf3 /**\cf0 \
+\cf3  * 			  Creates a deck of cards that can be shuffled and dealt out to a tableau\cf0 \
+\cf3  * 			  \cf0 \
+\cf3  * 			  Class Invariants: deck is not empty or null once initialized, \ul enum\ulnone  Ranks\cf0 \
+\cf3  * 								& Suits are not empty or null\cf0 \
+\cf3  * \cf4 @version\cf3    Completed \ul Nov\ulnone  7 : Due \ul Nov\ulnone  7\cf0 \
+\cf3  * \cf4 @author\cf3     \ul Thomas\ulnone  \ul Hervey\ulnone  <h46\ul @umbc.edu\ulnone >\cf0 \
+\cf3  * \cf4 @project\cf3 	  CMSC202 \cf5 -\cf3 Fall 2011 \cf5 -\cf3 Project 3\cf0 \
+\cf3  * \cf4 @section\cf3    01\cf0 \
+\cf3  */\cf0 \
+\pard\pardeftab720
+\cf2 public\cf0  \cf2 class\cf0  Deck \{\
+	\cf6 //Declaring a size for a standard deck of cards (minus the two Jokers)\cf0 \
+	\cf2 int\cf0  \cf7 deckSize\cf0  = 52;\
+	\cf6 //Declaring array for suits, ranks and cards\cf0 \
+	Suit[] \cf7 suits\cf0 ;\
+	Rank[] \cf7 ranks\cf0 ;\
+	Card[] \cf7 deck\cf0 ; \cf6 //Holds card objects (each with rank and suit)\cf0 \
+\
+	\cf2 public\cf0  Deck()\{\
+		\cf6 //Adds all of the enumerated values for each array\cf0 \
+		\cf7 suits\cf0  = Suit.values();\
+		\cf7 ranks\cf0  = Rank.values();\
+		\cf6 //Creating 52 card objects with rank and suit in order\cf0 \
+		\cf7 deck\cf0  = \cf2 new\cf0  Card[\cf7 deckSize\cf0 ];\
+		\cf6 //Declaring a counter to get all the way through 52 cards\cf0 \
+		\cf2 int\cf0  counter = 0;\
+		\cf6 //For each suit\cf0 \
+		\cf2 for\cf0 (\cf2 int\cf0  x = 0; x < \cf7 suits\cf0 .\cf7 length\cf0 ; x ++)\{\
+			\cf6 //For each rank\cf0 \
+			\cf2 for\cf0 (\cf2 int\cf0  y = 0; y < \cf7 ranks\cf0 .\cf7 length\cf0 ; y ++)\{\
+				\cf6 //Create a new card object with new rank and/or suit value\cf0 \
+				\cf7 deck\cf0 [counter] = \cf2 new\cf0  Card(\cf7 suits\cf0 [x], \cf7 ranks\cf0 [y]);\
+				\cf6 //Increment our counter (should be 52 by the end)\cf0 \
+				counter += 1;\
+			\}\
+		\}\
+	\}\
+\
+	\cf3 /**\cf0 \
+\pard\pardeftab720
+\cf3 	 * Shuffles the deck by using a random number generator\cf0 \
+\cf3 	 * created by the gui's seed\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: seed isn't null, deck isn't null or empty\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: deck is shuffled\cf0 \
+\cf3 	 * \cf4 @param\cf3  seed\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  \cf2 void\cf0  Shuffle(\cf2 long\cf0  seed)\{\
+		\cf2 if\cf0 (\cf7 deck\cf0  == \cf2 null\cf0  || \cf7 deck\cf0 [0] == \cf2 null\cf0 )\
+			System.\cf7 out\cf0 .println(\cf8 "Sorry, you have no deck to shuffle"\cf0 );\
+		\cf2 else\cf0 \{\
+			\cf6 //Creating a new random number generator\cf0 \
+			Random randomNumberGenerator = \cf2 new\cf0  Random(seed);\
+			\cf6 //Creating a temporary variable used for switching\cf0 \
+			Card temp;\
+			\cf2 int\cf0  n = \cf7 deck\cf0 .\cf7 length\cf0  -1;\
+			\cf2 for\cf0 (\cf2 int\cf0  i = n; i > 0 ; i--)\{\
+				temp = \cf7 deck\cf0 [n];\
+				\cf2 int\cf0  randomNumber = randomNumberGenerator.nextInt(i);\
+				\cf7 deck\cf0 [n] = \cf7 deck\cf0 [randomNumber];\
+				\cf7 deck\cf0 [randomNumber] = temp;\
+				n = i;\
+			\}\
+		\}\
+	\}\
+\
+	\cf3 /**\cf0 \
+\cf3 	 * Simulates drawing a card by removing the top card of our\cf0 \
+\cf3 	 * deck and placing it in the last spot of our tableau\cf0 \
+\cf3 	 * \ul Pre\cf5 \ulnone -\cf3 condition: deck isn't null or empty\cf0 \
+\cf3 	 * Post\cf5 -\cf3 condition: deck is one card smaller and that one card is in the tableau\cf0 \
+\cf3 	 * \cf4 @return\cf0 \
+\cf3 	 */\cf0 \
+	\cf2 public\cf0  Card drawCard()\{\
+		\cf2 if\cf0 (\cf7 deck\cf0  == \cf2 null\cf0  || \cf7 deck\cf0 [0] == \cf2 null\cf0 )\{\
+			System.\cf7 out\cf0 .println(\cf8 "Sorry, you have no deck to draw from."\cf0 );\
+			\cf2 return\cf0  \cf2 null\cf0 ;\
+		\}\
+		\cf2 else\cf0 \{\
+			\cf6 //Getting the card on the top of the deck\cf0 \
+			Card topCard = \cf7 deck\cf0 [0];\
+			\cf6 //Making the top of the deck null\cf0 \
+			\cf7 deck\cf0 [0] = \cf2 null\cf0 ;\
+			\cf6 //For each of the remaining cards in our deck, push their location up one\cf0 \
+			\cf2 for\cf0 (\cf2 int\cf0  i = 1; i < \cf7 deck\cf0 .\cf7 length\cf0 ; i++)\
+			\cf2 if\cf0 (\cf7 deck\cf0 [i-1] == \cf2 null\cf0 )\{\
+				\cf7 deck\cf0 [i-1] = \cf7 deck\cf0 [i];\
+				\cf7 deck\cf0 [i] = \cf2 null\cf0 ;\
+			\}\
+		\cf2 return\cf0  topCard;\
+		\}\
+	\}\
+	\
+	\cf2 public\cf0  \cf2 static\cf0  \cf2 void\cf0  main(String[] args)\{\
+		Deck test = \cf2 new\cf0  Deck();\
+		System.\cf7 out\cf0 .println(test.drawCard());\
+		System.\cf7 out\cf0 .println(test.drawCard());\
+		System.\cf7 out\cf0 .println(test.drawCard());\
+		\cf2 for\cf0 (\cf2 int\cf0  i = 0; i < test.\cf7 deck\cf0 .\cf7 length\cf0 ; i++)\
+			System.\cf7 out\cf0 .println(test.\cf7 deck\cf0 [i]);\
+		test.Shuffle(12345);\
+		\cf2 for\cf0 (\cf2 int\cf0  i = 0; i < test.\cf7 deck\cf0 .\cf7 length\cf0 ; i++)\
+			System.\cf7 out\cf0 .println(test.\cf7 deck\cf0 [i]);\
+		System.\cf7 out\cf0 .println(test.drawCard());\
+		test.Shuffle(55555);\
+		System.\cf7 out\cf0 .println(test.drawCard());\
+	\}\
+\}\
+}

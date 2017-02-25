@@ -1,0 +1,99 @@
+LOAD            RRRRR665:   Name =Bill Faggot     Age =   800
+LOAD      AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+LOAD           YYYYFUCKU:   Name =Lots of Meat     Age =     2
+LOAD           I WAN COX:   Name =Pussy Cookie     Age =    14
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	On the ground in Baltimore
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+TAKEOFF Philadelphia
+CLIMB to a new altitude of 600
+DESCEND to a new altitude of 400
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	Flying from Baltimore to Philadelphia
+	Current altitude: 400
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+LAND
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	On the ground in Philadelphia
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+TAKEOFF Seattle
+Error: Cannot climb. Will exceed maximum allowable altitude of 1000
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	Flying from Philadelphia to Seattle
+	Current altitude: 1000
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+Error: Cannot descend. Will go below minimum altitude of 100
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	Flying from Philadelphia to Seattle
+	Current altitude: 100
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+LAND
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	On the ground in Seattle
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	           RRRRR665:   Name =Bill Faggot     Age =   800
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2
+LOAD             I FUX U:   Name =Nigga Dice     Age =    25
+Error: Cannot unload Tammy Testicles item because is isn't on the transport
+UNLOAD            RRRRR665:   Name =Bill Faggot     Age =   800
+Error: Cannot unload RRRRR665 item because is isn't on the transport
+Error: Cannot unload Lots of Meat item because is isn't on the transport
+Error: Cannot unload Ken's Cookies item because is isn't on the transport
+Error: Cannot unload Pete's Peppers item because is isn't on the transport
+PRINT
+TransportStatus
+---------------
+	Minimum flying altitude: 100
+	Maximum flying altitude: 1000
+	Maximum number of items: 5
+	On the ground in Seattle
+	     AAABABSBBFUCKU:   Name =Tammy Testicles     Age =   600
+	            I FUX U:   Name =Nigga Dice     Age =    25
+	          I WAN COX:   Name =Pussy Cookie     Age =    14
+	          YYYYFUCKU:   Name =Lots of Meat     Age =     2

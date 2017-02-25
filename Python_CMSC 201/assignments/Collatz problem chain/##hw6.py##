@@ -1,0 +1,25 @@
+#File Name:       hw6.py
+#Author:          Thomas Hervey
+#Section:         3
+#E-Mail:          h46@umbc.edu
+#Description:     This program prints out the chain of numbers in the unusual
+#                 sequence called the Collatz problem. Given a an integer
+#                 or a range, the chain will be printed out. The chain's
+#                 interesting propertiy is that (although with debate as to how
+#                 and if it always works) given any number other than 1, if
+#                 the number is even divide it by two and if it is odd,
+#                 multiply it by three and add one. Eventually this should
+#                 reach the number one.
+
+
+
+
+#This function acts as the greater, letting the user know what the program
+#will do.
+def printGreeting():
+    print('Hello and welcome to ')
+#This function uses a while loop and prints out a single chain for each number
+#in the loop.The loop will keep going until the number reaches 1. There is a
+#counter that keeps track of how long the chain is and in the end returns how
+#long the sequence chain is.
+def hailstone()

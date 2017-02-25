@@ -1,0 +1,298 @@
+#File:        design2.txt
+#Author:      Thomas Hervey
+#Date:        5/9/11
+#E-Mail:      h46@umbc.edu
+#Section:     3
+#Description: This file will act as an outline for our proj2.py file which 
+#             will use recursive functions to draw the koch snowflake pattern.
+#             This file will act as a description of what each of the functions
+#             will do and how they interact with each other. There will also
+#             be a declaration of constants and any imported files we will use.
+
+
+
+Algorithm Design:
+
+
+I.    The user will be prompted by a main menu to select which graphic of a 
+      recursive fractal function they want to see. If they select a regular
+      Koch curve, they will be able to pick the color and the degree
+      (up through 4) to go until.
+
+II.   Once an option has been chosen, a 500x500 window will be created. 
+	   A. For regular Koch snowflake a recursive call to drawKochSnowflake
+              will get the turtle to create the outline to the given degree.
+              Then, only the outline will all be drawn at once.
+              The recursive call will use this criteria:
+                  if degree == 0: draw a basic equilaterial triangle
+                  else: divide length by 3, subtract one from the degree,
+                  and call drawKochSnowflake three more times with turn left
+                  60 degrees, right 120, and left 60 degrees in between them. 
+                  The point can be easily computed from the current location
+                  by using dx = length * cos(direction) and dy = length * 
+		  sin(drection).
+           B. For a C-Curve, a recursive call to drawCCurve  will get the 
+              turtle to create the outline to the given degree. Then, only
+              the outline will all be drawn at once.
+              The recursive call will use this criteria:
+                  call drawCCurve of size length/sqrt(2) twice with turn
+                  right 45, right 90 and left 45 degrees in between them.
+           C. For an animated Kotch snowflake a recursive call to
+              drawKochSnowflake will get the turtle to create the outline to
+              the given degree. Between each segment drawn, there will be a
+              pause, this'll give an animated effect. Then, for each degree,
+              the same thing will be done. This way, when finished it will not
+              represent only the outline. The mathmatical equation is above in
+              letter:  A.
+           D. For a dragon curve a recursive call to drawDragonCurve will get
+              the turtle to create an outline to the given degree. Then,
+              only the outline will all be drawn at once.
+III.   Once finished, the window will close after a few seconds and the user
+       will be prompted at the menu again. The user may continue selecting
+       graphics until they quot the program.
+              
+
+
+
+
+_______________________________________________________________________________
+Constants:
+
+
+import sys
+import textwrap
+import string
+from graphics import *
+from util import *
+from turtle import *
+
+
+#Declaring minimum and maximum degree range constants
+DEGREE_MIN = 0
+DEGREE_MAX = 4
+#Declaring graphic color constants
+RED = 'Red'
+ORANGE = 'Orange'
+YELLOW = 'Yellow'
+GREEN = 'Green'
+BLUE = 'Blue'
+INDIGO = 'Indigo'
+VIOLET = 'Violet'
+#Declaring a degree constant for the C-Curve and the Animated Koch Curve
+CCURVEDEGREE, DRAGONCURVEDEGREE = 12
+KOCHANIMATED = 4
+#Declaring colors for the five Animated Koch Curve degrees
+AK0 = 'Green'
+AK1 = 'Orange'
+AK2 = 'Blue'
+AK3 = 'Red'
+AK4 = 'Black'
+#Declaring length that a side starts out as, radian-degree conversion, and
+#window size constants
+LENGTH = 150
+RADIAN = 0.01745329
+WIN_HEIGHT = 500
+WIN_WIDTH = 500
+
+
+
+
+_______________________________________________________________________________
+Functions:
+
+
+#printGreeting()
+#Input: NONE
+#Output: Printed greeting
+#This function will give an introduction to the user as to what the program
+#is able to do and a bit of a background into the koch curve, fractals and
+#recursion.
+def printGreeting():
+
+
+
+
+#displayMainMenu()
+#Input: NONE
+#Output: Printed menu
+#This function will visually display the main menu with the different options
+#that the user can pick and view. These options inculde a simple koch snowflake
+#up to the fourth degree, a C curve, an animated koch curve, a dragon curve
+#(for extra credit) or quit.
+def displayMainMenu():
+
+
+
+
+    
+#getValidMenuChoice()
+#Input: choice(user's input menu choice)
+#Output: K, C, A, D or Q
+#This function will check to see which menu choice they picked. If they picked
+#something that isn't valid, it will prompt the user again until a valid answer
+#is picked. Depending on which correct answer they pick, the function will
+#return a variable with which the main method will call following according
+#functions.
+def getValidMenuChoice():
+
+
+
+
+
+#getValidDegree()
+#Input: NONE
+#Output: valid degree number - degree > 0
+#This function will get the degree number that the user wants the graphic to go
+#to and makes sure that it is valid. 
+def getValidDegree():
+
+
+
+
+
+#getValidColor()
+#Input: NONE
+#Output: color choice
+#This function will ask the user for which color they want to use and makes
+#sure that it is a valid color and is within the range of our standard
+#'8-color crayon box'.
+def getValidColor():
+
+
+
+
+          
+#getValidInt()
+#Input: MIN (0), MAX (4)
+#Output: true or false
+#This function will check to see if the user has put in a valid number within
+#the range 0-4 inclusive. We only want to show up to 4 degrees of the snowflake
+#so if they enter something else, they will be reprompted to enter in a degree
+#again.
+def getValidInt(numberChoice, MIN, MAX):
+
+
+
+
+
+#drawKochSnowflake()
+#Input: degree
+#Output: Graphic representation of a Koch snowflake to the (n)th degree as
+#        specified by the user.
+#This function acts as the control structure for the K menu option. Here,
+#the graphic window will be created and using several calls to other functions,
+#with a vaild degree number, the recursive snowflake will be drawn.
+def drawKochSnowflake(degree):
+
+
+
+
+
+#drawCCurve()
+#Input: degree
+#Output: Graphic representation of a C-Curve to the n(th) degree as
+#        specified by the user.
+#This function acts as the control structure for the C menu option. Here,
+#the graphic window will be created and using several calls to other functions,
+#with a valid degree number, the recursive C-Curve will be drawn.
+def drawCCurve():
+
+
+
+
+   
+#drawKochAnimation()
+#Input: degree
+#Output: Graphic representation of a Koch snowflake to the (n)th degree as
+#        specified by the user. Using a time function, the recursive function
+#        will draw each degree seperately so that the user can visually see
+#        the Koch snowflake develop in an animated way.
+#This function acts as the control structure for the A menu option. Here,
+#the graphic window will be created and using several calls to other functions,
+#with a valid degree number, the recursive snowflake will be drawn with timed
+#animation for each degree.
+def drawKochAnimation():
+
+
+
+
+   
+#drawDragonCurve()
+#Input: degree
+#Output: Graphic representation of a Koch snowflake to the (n)th degree as
+#        specified by the user.
+#This function acts as the control structure for the D menu option. Here,
+#the graphic window will be created and using several calls to other functions,
+#with a valid degree number, the recursive dragon will be drawn.
+def drawDragonCurve(degree):
+
+
+
+
+
+class turtle:
+
+    #initialize()
+    #Input: thisTurtle, location, direction
+    #Output: NONE
+    #This is our constructor that will create our instance variables
+    def initialize(thisTurtle, location, direction):
+        thisTurtle.location = Point(location)
+        thisTurtle.direction = float(direction)
+    
+
+
+
+    #***I don't think I am going to need this one***    
+    #turtleGrapher()
+    #Input: title, degree
+    #Output: image
+    #This method will be the master grapher. From here, all of the other turtle
+    #functions will be called to get the 'turtle' to move in the right way.
+    #This function will be called recrusively until each degree is drawn.
+    def turtleGrapher(title, degree):
+    
+    
+    
+    
+    #turn()
+    #Input: turnDegree
+    #Output: turnValue (turtle's orientation)
+    #This method will act as a way to give the turtle a new direction based off
+    #of the old direction in terms of degrees (out of 360). Therefore, a turn
+    #90 will cause the turtle to face 90 degrees counterclockwise from its last
+    #direction.
+    def turn(turnDegree):
+    
+
+
+
+    #draw(color)
+    #Input: color
+    #Output: drawn line pixel
+    #This method will draw a line the whole way for where the turtle needs to
+    #move to.
+    def draw(color):
+
+
+
+    
+    #moveTo()
+    #Input: location, direction, color
+    #Output: NONE
+    #This method will take the updated location and direction and decide
+    #which location to move to next. A call to draw will have the turtle
+    #actually draw a line for each location along the way until the moveTo spot
+    def moveTo(location, direction, color):
+
+    
+
+    #***I don't know if we will need this one either***
+    #getLocation()
+    #Input: NONE
+    #Output: X, Y
+    #This method will find the x and y positions of the turtle in it's current
+    #location and return them
+    def getLocation():
+       
+    
